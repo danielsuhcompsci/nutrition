@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BrandedFood {
+  fdc_id                      Int       @id // references food  
+  brand_owner                 String?   @db.VarChar(255)
+  brand_name                  String?   @db.VarChar(255)
+  subbrand_name               String?   @db.VarChar(255)
+  gtin_upc                    String    @db.VarChar(20)
+  ingredients                 String?
+  not_a_significant_source_of String?
+  serving_size                Float?
+  serving_size_unit           String?   @db.VarChar(255)
+  household_serving_fulltext  String?
+  branded_food_category       String?
+  data_source                 String    @db.VarChar(255) // GDSN or LI
+  package_weight              String?   @db.VarChar(255)
+  modified_date               DateTime? @db.Date
+  available_date              DateTime  @db.Date
+  market_country              String    @db.VarChar(255) // 56 is longest country name length
+  discontinued_date           DateTime? @db.Date
+  preparation_state_code      String?   @db.VarChar(255)
+  trade_channel               String?
+  short_description           String?
+
+  food Food @relation(fields: [fdc_id], references: [fdc_id])
+
+  @@map("branded_food")
+}
+
+model FoodNutrient {
+  id                Int       @id @default(autoincrement())
+  fdc_id            Int       
+  nutrient_id       Int
+  amount            Float?
+  data_points       Int?
+  derivation_id     Int?
+  // standard_error  Int
+  min               Float?
+  max               Float?
+  median            Float?
+  loq               Float?
+  footnote          String?
+  min_year_acquired String?   @db.VarChar(10)
+
+  food     Food     @relation(fields: [fdc_id], references: [fdc_id])
+  nutrient Nutrient @relation(fields: [nutrient_id], references: [id])
+
+  @@index([fdc_id])
+
+  @@map("food_nutrient")
+}
+
+model Food {
+  fdc_id           Int      @id
+  data_type        String   @db.VarChar(50)
+  description      String?   
+  desc_vector      Unsupported("TSVECTOR")?  @default(dbgenerated())
+  food_category_id Int?     
+  publication_date DateTime @db.Date
+
+  // Not actually fields in the DB  
+  foodNutrient FoodNutrient[]
+  brandedFood  BrandedFood[]
+
+  @@index([description])
+  @@index([desc_vector])
+
+  @@map("food")
+}
+
+model Nutrient {
+  id           Int    @id @default(autoincrement())
+  name         String @db.VarChar(100)
+  unit_name    String @db.VarChar(100)
+  nutrient_nbr Float?
+  rank         Float?
+
+  food_nutrient FoodNutrient[]
+
+  @@map("nutrient")
+}
+
+// model FoodCategory {  
+// @@map("food_category")
+// }
