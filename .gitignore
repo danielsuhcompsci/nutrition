@@ -1,6 +1,11 @@
 node_modules
-.env
+.env*
 compose.yaml
 *.sh
 migrations
 dist
+.DS_Store
+deploy.md
+*.key
+*.crt
+*.conf

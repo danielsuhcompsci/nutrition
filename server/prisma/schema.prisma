@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = []
 }
 
 datasource db {
@@ -65,7 +65,7 @@ model Food {
   fdc_id           Int      @id
   data_type        String   @db.VarChar(50)
   description      String?   
-  desc_vector      Unsupported("TSVECTOR")?  @default(dbgenerated())
+  desc_vector      Unsupported("TSVECTOR")?  @default(dbgenerated()) // vector column for description
   food_category_id Int?     
   publication_date DateTime @db.Date
 
