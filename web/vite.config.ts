@@ -6,7 +6,7 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 export default defineConfig(({ command, mode, ssrBuild }) => {
   if (command == "serve")
     return {
-      plugins: [react()],
+      plugins: [react(), basicSsl()],
     };
   else
     return {
