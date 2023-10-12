@@ -1,14 +1,12 @@
-import { BiBarcodeReader } from "react-icons/bi";
-import { BarcodePluginProps } from "./Html5BarcodeScanner";
 import {
   Html5Qrcode,
   Html5QrcodeCameraScanConfig,
-  Html5QrcodeFullConfig,
   Html5QrcodeSupportedFormats,
   QrcodeErrorCallback,
   QrcodeSuccessCallback,
 } from "html5-qrcode";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import Button from "../Button";
 
 interface CustomBarcodeScannerProps {
   config: Html5QrcodeCameraScanConfig;
@@ -67,15 +65,15 @@ const CustomBarcodeScanner = ({
           // document.createElement("div");
         },
         (err) => {
-          console.error(err);
+          // console.error(err);
         }
       );
   };
 
   const stopScanning = () => {
     if (scannerRef.current) {
-      document.getElementById(barcodeScannerContainerName)!.style.display =
-        "none";
+      // document.getElementById(barcodeScannerContainerName)!.style.display =
+      //   "none";
       scannerRef.current
         .stop()
         .then(() => {
@@ -95,24 +93,16 @@ const CustomBarcodeScanner = ({
     <>
       <div
         id={barcodeScannerContainerName}
-        className={"" + (!isScanning ? "" : "")}
+        className={"w-screen h-screen"}
       ></div>
       {!isScanning ? (
-        <button
-          type="button"
-          className="text-3xl h-auto"
-          onClick={startScanning}
-        >
+        <Button className="absolute top-20 text-4xl" onClick={startScanning}>
           Start Scanning
-        </button>
+        </Button>
       ) : (
-        <button
-          type="button"
-          onClick={stopScanning}
-          className="absolute bottom-20 z-10 bg"
-        >
+        <Button onClick={stopScanning} className="absolute bottom-20 z-10">
           Stop scanning
-        </button>
+        </Button>
       )}
       {/* <p className="absolute top-16 z-10">
         {isScanning ? "Is Scanning" : "Not scanning"}

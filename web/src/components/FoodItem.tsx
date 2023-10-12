@@ -11,10 +11,12 @@ export const FoodItem = ({ foodId, foodName, index }: FoodItemProps) => {
   return (
     <Link
       to={`/food/${foodId}`}
-      className="text-inherit hover:bg-violet-600 hover:text-red-300"
+      className="text-inherit hover:text-inherit"
       key={index}
     >
-      <div className={`flex justify-center items-center p-1`}>
+      <div
+        className={`flex justify-center items-center p-3 hover:bg-slate-500`}
+      >
         <p className="text-sm">{foodName}</p>
       </div>
     </Link>

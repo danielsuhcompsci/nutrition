@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { BiBarcodeReader } from "react-icons/bi";
+import { IconContext } from "react-icons";
 
 function SearchPage() {
   return (
@@ -10,8 +11,10 @@ function SearchPage() {
       "
       >
         <SearchBar />
-        <Link to={"/scanner"}>
-          <BiBarcodeReader />
+        <Link className="text-white hover:text-white" to={"/scanner"}>
+          <IconContext.Provider value={{ size: "30" }}>
+            <BiBarcodeReader />
+          </IconContext.Provider>
         </Link>
       </div>
     </div>

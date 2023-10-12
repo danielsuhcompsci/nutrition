@@ -34,7 +34,11 @@ export const NutrientHorizontalBarChart = ({
         primaryAxis: primaryAxis,
         secondaryAxes: secondaryAxis,
         dark: true,
-        primaryCursor: false,
+        primaryCursor: {
+          showLabel: false,
+          show: false,
+        },
+        defaultColors: ["pink", "white"],
         secondaryCursor: {
           // value: (value: number) => value * 1000,
           // onChange(value) {
@@ -42,7 +46,7 @@ export const NutrientHorizontalBarChart = ({
           // },
         },
         // padding: {
-        //   bottom: 100,
+        //   bottom: 10,
         //   left: 10,
         //   right: 10,
         //   top: 10,

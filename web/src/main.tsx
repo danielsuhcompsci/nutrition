@@ -4,7 +4,7 @@ import SearchPage from "./pages/SearchPage.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { FoodItemPage } from "./pages/FoodItemPage.tsx";
+import FoodItemPage from "./pages/FoodItemPage.tsx";
 import { foodLoader } from "./loaders/foodLoader.tsx";
 import ScannerPage from "./pages/ScannerPage.tsx";
 
