@@ -56,8 +56,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          cd server
-          tsc
+          cd server && yarn && tsc          
           cd ../web
           docker buildx build --build-context server=../server -t web .        
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:web
