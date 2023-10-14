@@ -58,7 +58,7 @@ jobs:
           # be deployed to ECS.
           cd server && yarn && tsc --declaration          
           cd ../web
-          docker buildx build --build-context server=../server -t web .        
+          docker buildx build --build-context server=../server -t $ECR_REGISTRY/$ECR_REPOSITORY:web .        
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:web
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:web" >> $GITHUB_OUTPUT
 
