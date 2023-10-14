@@ -30,9 +30,9 @@ FROM nginx:1.13-alpine
 
 
 # COPY nginx.conf /etc/nginx/nginx.conf
-COPY test.crt /
-COPY test.key /
+# COPY test.crt /
+# COPY test.key /
 # COPY test.conf /etc/nginx/sites-available/
-COPY test.conf /etc/nginx/conf.d/test.conf
+# COPY test.conf /etc/nginx/conf.d/test.conf
 # RUN cat >> etc/hosts
 COPY --from=builder /app/dist /usr/share/nginx/html
