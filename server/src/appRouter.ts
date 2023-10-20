@@ -73,7 +73,9 @@ export const appRouter = router({
       LIMIT ${input.take}
       OFFSET ${input.skip ?? 0};`;
 
-      console.log("Data: ", data);
+      // console.log("Data: ", data);
+
+      // console.log("Second: ");
 
       // const data1 = await ctx.db.$queryRaw<
       //   { fdc_id: number; description: string | null }[]

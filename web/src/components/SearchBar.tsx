@@ -32,6 +32,7 @@ const SearchBar = () => {
   const loadingIndicatorRef = useRef(null);
   const [haveSearched, setHaveSearched] = useState(false);
   const [isStrict, setStrict] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -40,18 +41,21 @@ const SearchBar = () => {
           if (entry.isIntersecting) {
             // console.log(haveSearched);
             // console.log("intersected");
-            if (haveSearched)
+            if (haveSearched) {
+              setIsLoading(true);
               searchFood({ query: input, take, skip })
                 .then((data) => {
                   setFoods((f) => {
                     if (f) return [...f, ...data];
                     else return data;
                   });
+                  setIsLoading(false);
                 })
                 .catch((err) => {
                   console.error(err);
                   // throw err;
                 });
+            }
           }
         });
       },
@@ -76,6 +80,7 @@ const SearchBar = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setIsLoading(true);
 
           if (!isStrict) {
             searchFood({
@@ -87,6 +92,7 @@ const SearchBar = () => {
                 setFoods(data);
                 // console.log("searched foods");
                 setHaveSearched(true);
+                setIsLoading(false);
               })
               .catch((err) => {
                 console.error(err);
@@ -96,6 +102,7 @@ const SearchBar = () => {
               .then((data) => {
                 setFoods(data);
                 setHaveSearched(true);
+                setIsLoading(false);
               })
               .catch((err) => console.error(err));
           }
@@ -113,7 +120,7 @@ const SearchBar = () => {
       >
         <div className="flex">
           <input
-            className="rounded-sm text-lg px-4 py-1 h-auto text-inherit w-full"
+            className="rounded-sm text-lg px-4 py-1 h-auto text-inherit bg-slate-500 w-full"
             placeholder={"Type something in!"}
             value={input}
             onChange={(e) => {
@@ -168,7 +175,7 @@ const SearchBar = () => {
         >
           <IconContext.Provider
             value={{
-              className: !haveSearched ? "hidden " : "" + "animate-spin",
+              className: !isLoading ? "hidden " : "" + "animate-spin",
             }}
           >
             <AiOutlineLoading />
