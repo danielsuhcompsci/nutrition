@@ -17,12 +17,12 @@
   - add food
 - Give nutrient information based on recipe
   - based on recipe URL
-- Use object detection model (YOLOv8) to give nutritional information about foods in an image
+- Use model to give nutritional information about foods in an image
 
 # Architecture
 
-- Web Container (Fargate) with ALB
+- Web Container with ALB
 
-- Server Container (Fargate) with ALB
+- Server Container with ALB
 
 - PostgreSQL Instance (AWS Relational Database Service)
