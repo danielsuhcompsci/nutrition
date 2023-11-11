@@ -1,3 +1,5 @@
+![](https://github.com/danielsuhcompsci/nutrition/public/demo.gif)
+
 # About
 
 - Web app that displays nutrition info for ~2,000,000 foods

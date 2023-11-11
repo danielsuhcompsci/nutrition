@@ -35,6 +35,12 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (input == "") {
+      setFoods(null);
+      setSkip(0);
+      setHaveSearched(false);
+    }
+
     const observer = new IntersectionObserver(
       (entries, _) => {
         entries.forEach((entry) => {
@@ -118,16 +124,16 @@ const SearchBar = () => {
           //   });
         }}
       >
-        <div className="flex">
+        <div className="flex flex-shrink">
           <input
-            className="rounded-sm text-lg px-4 py-1 h-auto text-inherit bg-slate-500 w-full"
+            className="rounded-2xl text-lg px-4 py-1 h-auto text-slate-600 bg-slate-100 w-full"
             placeholder={"Type something in!"}
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
             }}
           />
-          <Button
+          {/* <Button
             className="border-0"
             onClick={() => {
               setSkip(0);
@@ -136,30 +142,33 @@ const SearchBar = () => {
             }}
           >
             Clear
-          </Button>
+          </Button> */}
           <Button
-            className="border-0"
+            className="border-0 p-3 text-sm"
             onClick={() => {
               setStrict(!isStrict);
             }}
           >
-            {isStrict ? "Text Search" : "Exact Match"}
+            {isStrict ? "Use Text Search" : "Use Exact Match"}
           </Button>
         </div>
       </form>
+
       <div className="absolute w-full border-slate-200 space-y-5 h-auto">
         {haveSearched ? (
           foods && foods.length > 0 ? (
-            foods.map((food, index) => {
-              return (
-                <FoodItem
-                  foodId={food.fdc_id}
-                  foodName={food.description ?? ""}
-                  index={index}
-                  key={index}
-                />
-              );
-            })
+            <>
+              {foods.map((food, index) => {
+                return (
+                  <FoodItem
+                    foodId={food.fdc_id}
+                    foodName={food.description ?? ""}
+                    index={index}
+                    key={index}
+                  />
+                );
+              })}
+            </>
           ) : (
             <div className="border-red-100 bg-red-500 rounded-lg flex justify-center items-center text-2xl absolute w-full h-auto">
               No results found
@@ -168,7 +177,6 @@ const SearchBar = () => {
         ) : (
           <></>
         )}
-
         <div
           ref={loadingIndicatorRef}
           className={"flex justify-center items-center"}

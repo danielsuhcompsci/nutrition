@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { Food } from "../trpc/helpers";
 import { NutrientHorizontalBarChart } from "../components/NutrientHorizontalBarChart";
 import Button from "../components/Button";
-import { NutritionChartNames } from "../constants";
+import { NutritionChartNames, recommendedIntakesAdultMale } from "../constants";
+import { Chart, ChartProps } from "react-chartjs-2";
+import "chart.js/auto";
 
 export type NutrientData = {
   name: string;
@@ -12,12 +14,6 @@ export type NutrientData = {
 };
 
 const FoodItemPage = () => {
-  const food: any = useLoaderData();
-  const navigate = useNavigate();
-
-  // const [data, setData] = useState<UserSerie<NutrientData>[] | null>(null);
-  const [calories, setCalories] = useState<number | null>(null);
-
   const isFood = (food: any): food is Food => {
     // console.log(food);
 
@@ -26,6 +22,12 @@ const FoodItemPage = () => {
       (food as Food).foodNutrient !== undefined
     );
   };
+
+  const food: any = useLoaderData();
+  const navigate = useNavigate();
+
+  // const [data, setData] = useState<UserSerie<NutrientData>[] | null>(null);
+  const [calories, setCalories] = useState<number | null>(null);
 
   useEffect(() => {
     if (food && isFood(food)) {
@@ -54,12 +56,6 @@ const FoodItemPage = () => {
       });
 
       if (filterByCalories.length == 1) setCalories(filterByCalories[0].amount);
-
-      // console.log(filterByCalories);
-
-      // console.log(data);
-
-      // setData(data);
     }
   }, [food]);
 
@@ -87,15 +83,19 @@ const FoodItemPage = () => {
             amount: value.amount!,
           })),
       },
-      // {
-      //   label: "Recommended",
-      //   data: food.foodNutrient
-      //     .filter((value) => set.has(value.nutrient.name) && value.amount)
-      //     .map((value) => ({
-      //       name: value.nutrient.name + "  " + value.nutrient.unit_name,
-      //       amount: value.amount! + Math.random() * 5 + 1,
-      //     })),
-      // },
+      {
+        label: "Recommended",
+        data: food.foodNutrient
+          .filter((value) => set.has(value.nutrient.name) && value.amount)
+          .map((value) => {
+            return {
+              name: value.nutrient.name + "  " + value.nutrient.unit_name,
+              amount: recommendedIntakesAdultMale[value.nutrient.name]
+                ? recommendedIntakesAdultMale[value.nutrient.name].amount ?? 0
+                : 0,
+            };
+          }),
+      },
     ];
 
     // console.log("Filtered: ", data);
@@ -110,9 +110,41 @@ const FoodItemPage = () => {
     return <NutrientHorizontalBarChart data={data} />;
   };
 
+  const config: ChartProps = {
+    type: "doughnut",
+    data: {
+      labels: ["Protein", "Fats", "Carbs", "Fiber"],
+      datasets: [
+        {
+          label: "Macronutrients",
+          data: [
+            "Protein",
+            "Lipids",
+            "Carbohydrates",
+            "Fiber, total dietary",
+          ].map((value) => {
+            const findIndex = food.foodNutrient.findIndex(
+              (nutrient) => nutrient.nutrient.name === value
+            );
+            return findIndex === -1 ? 0 : food.foodNutrient[findIndex].amount;
+          }),
+          // backgroundColor: [
+          //   "rgb(255, 99, 132)",
+          //   "rgb(255, 205, 86)",
+          //   "rgb(54, 162, 235)",
+          // ],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      color: "white",
+    },
+  };
+
   return (
     <div className="text-white w-screen h-screen fill-white">
-      <div className="flex p-5 justify-evenly items-center">
+      <div className="flex p-5 justify-left items-center">
         <Button
           onClick={() => {
             navigate("../");
@@ -120,10 +152,25 @@ const FoodItemPage = () => {
         >
           Go back
         </Button>
-        <div>
-          <h2>Name: {food.description}</h2>
+      </div>
+      <div className="flex flex-row justify-evenly">
+        <div className="flex flex-col justify-evenly items-center m-20 p-5 rounded-2xl text-black bg-slate-200">
+          <h2>
+            <span className="font-bold">Name: </span>
+            {food.description}
+          </h2>
 
-          <h2>Calories(kcal): {calories ?? "Unable to find calorie data"}</h2>
+          <h2>
+            <span className="font-bold">Calories(kcal)</span>:{" "}
+            {calories ?? "Unable to find calorie data"}
+          </h2>
+        </div>
+        <div className="px-15 py-20 flex justify-center items-center">
+          <Chart
+            data={config.data}
+            type={config.type}
+            options={config.options}
+          />
         </div>
       </div>
       {/* <div className="h-screen">

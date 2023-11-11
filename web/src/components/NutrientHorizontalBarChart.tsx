@@ -38,7 +38,7 @@ export const NutrientHorizontalBarChart = ({
           showLabel: false,
           show: false,
         },
-        defaultColors: ["pink", "white"],
+        defaultColors: ["pink", "#9b8eed"],
         secondaryCursor: {
           // value: (value: number) => value * 1000,
           // onChange(value) {
