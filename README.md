@@ -21,3 +21,6 @@
 - Give nutrient information based on recipe
   - based on recipe URL
 - Use model to give nutritional information about foods in an image
+
+
+_Deployments currently not working because I need to switch from Fargate to EC2_
