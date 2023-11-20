@@ -48,25 +48,28 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
 
-      - name: Build, tag, and push web image to Amazon ECR
+      - name: Build, tag, and push images to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: web
         run: |
-          # Build a containers
-          cd server && yarn && tsc --declaration # make type declarations (for web container)   
+          # Initial Step
+          cd server && yarn && tsc --declaration # make type declarations (for web container)             
 
-          # Build server container
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER .          
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER" >> $GITHUB_OUTPUT  
+          cat ./dist/appRouter.d.ts
 
           # Build web container
           cd ../web
           docker buildx build --build-context server=../server -t $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB .        
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB" >> $GITHUB_OUTPUT
+
+          # Build server container
+          cd ../server
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER .          
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER" >> $GITHUB_OUTPUT
 
       # - name: Fill in the new image ID in the Amazon ECS task definition
       #   id: task-def
