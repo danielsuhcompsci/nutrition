@@ -16,6 +16,9 @@ function SearchPage() {
             <BiBarcodeReader />
           </IconContext.Provider>
         </Link>
+        <div className="grid grid-cols-3">
+          <div></div>
+        </div>
       </div>
     </div>
   );

@@ -103,7 +103,7 @@ export const appRouter = router({
         take: input.take,
         select: {
           fdc_id: true,
-          description: true,
+          description: true,          
         },
         where: {
           description: {

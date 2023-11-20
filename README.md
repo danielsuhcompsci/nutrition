@@ -1,4 +1,4 @@
-![](https://github.com/danielsuhcompsci/nutrition/public/demo.gif)
+![](https://github.com/nutrition/public/demo.gif)
 
 # About
 
