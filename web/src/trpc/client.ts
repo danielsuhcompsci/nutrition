@@ -1,6 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 // import env from "../env";
-import { AppRouter } from "../../../server/dist/appRouter";
+import type { AppRouter } from "../../../server/dist/appRouter.d.ts";
+// import { AppRouter } from "../../../server/src/appRouter";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 //     👆 **type-only** import
 

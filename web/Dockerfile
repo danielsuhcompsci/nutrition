@@ -1,6 +1,6 @@
 FROM node:18-alpine AS development
 
-WORKDIR /app
+WORKDIR /web
 
 COPY package.json ./
 COPY yarn.lock ./
@@ -8,7 +8,7 @@ RUN yarn install --frozen-lockfile
 RUN yarn global add typescript 
 
 # Copy everything but node_modules
-COPY . ./  
+COPY . ./
 COPY --from=server ./dist /server/dist
 # COPY public ./public
 # COPY *config* ./
@@ -35,4 +35,4 @@ FROM nginx:1.13-alpine
 # COPY test.conf /etc/nginx/sites-available/
 # COPY test.conf /etc/nginx/conf.d/test.conf
 # RUN cat >> etc/hosts
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /web/dist /usr/share/nginx/html
