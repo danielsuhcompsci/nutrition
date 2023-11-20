@@ -17,13 +17,14 @@ on:
 env:
   AWS_REGION: us-east-2 # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: nutrition # set this to your Amazon ECR repository name
-  ECS_SERVICE: web-ALB # set this to your Amazon ECS service name
+  ECS_SERVICE: monolith-x86 # set this to your Amazon ECS service name
   ECS_CLUSTER: NutritionCluster # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION:
-    .aws/web-task-definition.json # set this to the path to your Amazon ECS task definition
+    .aws/web-and-server-task-definition.json # set this to the path to your Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME:
-    web # set this to the name of the container in the
+  CONTAINER_NAME_WEB: web # set this to the name of the container in the
+  CONTAINER_NAME_SERVER:
+    server
     # containerDefinitions section of your task definition
 
 jobs:
@@ -53,14 +54,19 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: web
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          cd server && yarn && tsc --declaration          
+          # Build a containers
+          cd server && yarn && tsc --declaration # make type declarations (for web container)   
+
+          # Build server container
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER .          
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_SERVER" >> $GITHUB_OUTPUT  
+
+          # Build web container
           cd ../web
-          docker buildx build --build-context server=../server -t $ECR_REGISTRY/$ECR_REPOSITORY:web .        
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:web
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:web" >> $GITHUB_OUTPUT
+          docker buildx build --build-context server=../server -t $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB .        
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$CONTAINER_NAME_WEB" >> $GITHUB_OUTPUT
 
       # - name: Fill in the new image ID in the Amazon ECS task definition
       #   id: task-def
