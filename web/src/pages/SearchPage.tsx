@@ -6,10 +6,7 @@ import { IconContext } from "react-icons";
 function SearchPage() {
   return (
     <div className="flex justify-center text-white w-screen h-screen pt-10">
-      <div
-        className="flex space-x-1 items-center h-10 w-2/3
-      "
-      >
+      <div className="flex items-center h-10 w:3/4 md:w-2/3 md:space-x-1">
         <SearchBar />
         <Link className="text-white hover:text-white" to={"/scanner"}>
           <IconContext.Provider value={{ size: "30" }}>

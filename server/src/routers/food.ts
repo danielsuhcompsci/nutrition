@@ -11,6 +11,14 @@ export const foodRouter = router({
         return await ctx.db.food.findFirstOrThrow({
           select: {
             description: true,
+            publication_date: true,
+            brandedFood: {
+              select: {
+                serving_size: true,
+                serving_size_unit: true,
+                gtin_upc: true,
+              },
+            },
             foodNutrient: {
               select: {
                 amount: true,
@@ -60,6 +68,8 @@ export const foodRouter = router({
     .query(async (opts) => {
       const { input, ctx } = opts;
 
+      // Selected the id and description from food, based on the description vector column (generated as tsvector of description),
+      // ordered by relevance (although ordering can be iffy)
       const data = await ctx.db.$queryRaw<
         { fdc_id: number; description: string | null }[]
       >`SELECT fdc_id, description FROM food
@@ -69,19 +79,6 @@ export const foodRouter = router({
       })) DESC
       LIMIT ${input.take}
       OFFSET ${input.skip ?? 0};`;
-
-      // console.log("Data: ", data);
-
-      // console.log("Second: ");
-
-      // const data1 = await ctx.db.$queryRaw<
-      //   { fdc_id: number; description: string | null }[]
-      // >`SELECT fdc_id, description FROM food
-      // WHERE desc_vector @@ plainto_tsquery(${input.query})
-      // LIMIT ${input.take}
-      // OFFSET ${input.skip ?? 0};`;
-
-      // console.log("Data1:", data1);
 
       return data;
     }),
@@ -96,6 +93,7 @@ export const foodRouter = router({
     .query(async (opts) => {
       const { input, ctx } = opts;
 
+      // Search with basic ILIKE (Postgres)
       const foods = await ctx.db.food.findMany({
         take: input.take,
         select: {

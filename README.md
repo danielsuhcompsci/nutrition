@@ -20,4 +20,7 @@
   - add food
 - Give nutrient information based on recipe
   - based on recipe URL
-- Use model to give nutritional information about foods in an image
+  - use OCR to automatically add recipe
+- Use OCR to scan nutrition facts label
+- Give recipe recommendations
+- Use vision/vision-language model to give nutritional information about foods in an image

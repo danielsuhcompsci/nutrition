@@ -5,8 +5,7 @@ import { Food } from "../trpc/helpers";
 import { NutrientHorizontalBarChart } from "../components/NutrientHorizontalBarChart";
 import Button from "../components/Button";
 import { NutritionChartNames, recommendedIntakesAdultMale } from "../constants";
-import { Chart, ChartProps } from "react-chartjs-2";
-import "chart.js/auto";
+import Doughnut from "../components/Doughnut";
 
 export type NutrientData = {
   name: string;
@@ -31,26 +30,6 @@ const FoodItemPage = () => {
 
   useEffect(() => {
     if (food && isFood(food)) {
-      // const allNames = NutritionChartNames.macro.names
-      //   .concat(NutritionChartNames.micro.minerals.names)
-      //   .concat(NutritionChartNames.micro.vitamins.names);
-
-      // const set = new Set(allNames);
-
-      // const data: UserSerie<NutrientData>[] = [
-      //   {
-      //     label: "Actual",
-      //     data: food.foodNutrient
-      //       .filter((value) => set.has(value.nutrient.name) && value.amount)
-      //       .map((value) => ({
-      //         name: value.nutrient.name + "  " + value.nutrient.unit_name,
-      //         amount: value.amount!,
-      //       })),
-      //   },
-      // ];
-
-      // console.log("Before:", food.foodNutrient);
-
       const filterByCalories = food.foodNutrient.filter((value) => {
         return value.nutrient.name == "Energy";
       });
@@ -66,6 +45,28 @@ const FoodItemPage = () => {
       </div>
     );
   }
+
+  const macroNames = [
+    "Protein",
+    "Lipids",
+    "Carbohydrates",
+    "Fiber, total dietary",
+  ];
+
+  const doughnutChartNames = ["Protein", "Fats", "Carbs", "Fiber"];
+
+  const getMacroValue = (name: string) => {
+    const findIndex = food.foodNutrient.findIndex(
+      (nutrient) => nutrient.nutrient.name === name
+    );
+    return (
+      findIndex === -1 ? 0 : food.foodNutrient[findIndex].amount
+    ) as number;
+  };
+
+  const getMacroValues = () => {
+    return macroNames.map((name) => getMacroValue(name));
+  };
 
   const chartFor = (names: string[]) => {
     const set = new Set(names);
@@ -110,38 +111,6 @@ const FoodItemPage = () => {
     return <NutrientHorizontalBarChart data={data} />;
   };
 
-  const config: ChartProps = {
-    type: "doughnut",
-    data: {
-      labels: ["Protein", "Fats", "Carbs", "Fiber"],
-      datasets: [
-        {
-          label: "Macronutrients",
-          data: [
-            "Protein",
-            "Lipids",
-            "Carbohydrates",
-            "Fiber, total dietary",
-          ].map((value) => {
-            const findIndex = food.foodNutrient.findIndex(
-              (nutrient) => nutrient.nutrient.name === value
-            );
-            return findIndex === -1 ? 0 : food.foodNutrient[findIndex].amount;
-          }),
-          // backgroundColor: [
-          //   "rgb(255, 99, 132)",
-          //   "rgb(255, 205, 86)",
-          //   "rgb(54, 162, 235)",
-          // ],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      color: "white",
-    },
-  };
-
   return (
     <div className="text-white w-screen h-screen fill-white">
       <div className="flex p-5 justify-left items-center">
@@ -153,24 +122,47 @@ const FoodItemPage = () => {
           Go back
         </Button>
       </div>
-      <div className="flex flex-row justify-evenly">
-        <div className="flex flex-col justify-evenly items-center m-20 p-5 rounded-2xl text-black bg-slate-200">
+      <div className="">
+        <div className="flex flex-col justify-evenly items-center md:m-5 p-5 rounded-2xl text-black bg-slate-200">
           <h2>
             <span className="font-bold">Name: </span>
             {food.description}
           </h2>
-
+          <h2>
+            <span className="font-bold">Publication Date: </span>
+            {food.publication_date ?? "No date found"}
+          </h2>
+          <h2>
+            <span className="font-bold">UPC: </span>
+            {food.brandedFood[0]?.gtin_upc ?? "No UPC found"}
+          </h2>
+          <h2>
+            <span className="font-bold">Serving Size: </span>
+            {food.brandedFood[0]?.serving_size ?? "(no size found)"}{" "}
+            {food.brandedFood[0]?.serving_size_unit ?? "(no unit found)"}
+          </h2>
           <h2>
             <span className="font-bold">Calories(kcal)</span>:{" "}
             {calories ?? "Unable to find calorie data"}
           </h2>
         </div>
-        <div className="px-15 py-20 flex justify-center items-center">
-          <Chart
-            data={config.data}
-            type={config.type}
-            options={config.options}
-          />
+        <div className="md:flex md:flex-row md:justify-evenly">
+          <div className="flex flex-col items-center justify-center pt-5">
+            {macroNames.map((name) => {
+              return (
+                <div>
+                  <span className="font-bold">{name}:</span>{" "}
+                  {getMacroValue(name)} G
+                </div>
+              );
+            })}
+            <p className="italic text-xs mt-2">
+              Note, 0 value may just indicate invalid data
+            </p>
+          </div>
+          <div className="px-15 py-5 flex justify-center items-center">
+            <Doughnut labels={doughnutChartNames} data={getMacroValues()} />
+          </div>
         </div>
       </div>
       {/* <div className="h-screen">
