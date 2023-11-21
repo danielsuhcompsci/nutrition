@@ -21,6 +21,12 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts", ".eslintrc.cjs", "vite.config.ts"],
+  "include": [
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "cypress/**/*.ts",
+    ".eslintrc.cjs",
+    "vite.config.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

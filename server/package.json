@@ -15,6 +15,7 @@
   },
   "scripts": {
     "dev": "nodemon -e ts --exec \"tsc && node dist/index.js\"",
+    "gen:types": "tsc --declaration",
     "start": "tsc --declaration && node dist/index.js"
   }
 }

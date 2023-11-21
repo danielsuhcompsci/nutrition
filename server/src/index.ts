@@ -8,7 +8,9 @@ import { db } from "./db";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 
 createHTTPServer({
-  middleware: cors({ origin: "*" }),
+  middleware: cors({
+    origin: "*",
+  }),
   router: appRouter,
   createContext,
 }).listen(4000);
