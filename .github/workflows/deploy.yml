@@ -15,17 +15,15 @@ on:
       - main
 
 env:
-  AWS_REGION: us-east-2 # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: nutrition # set this to your Amazon ECR repository name
-  ECS_SERVICE: monolith-v7 # set this to your Amazon ECS service name
-  ECS_CLUSTER: NutritionCluster # set this to your Amazon ECS cluster name
+  AWS_REGION: us-east-2 # preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: nutrition # Amazon ECR repository name
+  ECS_SERVICE: monolith-v7 # Amazon ECS service name
+  ECS_CLUSTER: NutritionCluster # Amazon ECS cluster name
   ECS_TASK_DEFINITION:
-    .aws/web-and-server-task-definition.json # set this to the path to your Amazon ECS task definition
+    .aws/web-and-server-task-definition.json # path to Amazon ECS task definition
     # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME_WEB: web # set this to the name of the container in the
-  CONTAINER_NAME_SERVER:
-    server
-    # containerDefinitions section of your task definition
+  CONTAINER_NAME_WEB: web
+  CONTAINER_NAME_SERVER: server
 
 jobs:
   deploy:
@@ -57,7 +55,7 @@ jobs:
           # Initial Step
           cd server && yarn && tsc --declaration # make type declarations (for web container)             
 
-          cat ./dist/appRouter.d.ts
+          # cat ./dist/appRouter.d.ts
 
           # Build web container
           cd ../web

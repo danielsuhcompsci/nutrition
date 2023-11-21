@@ -139,7 +139,8 @@ const FoodItemPage = () => {
           <h2>
             <span className="font-bold">Serving Size: </span>
             {food.brandedFood[0]?.serving_size ?? "(no size found)"}{" "}
-            {food.brandedFood[0]?.serving_size_unit ?? "(no unit found)"}
+            {food.brandedFood[0]?.serving_size_unit ?? "(no unit found)"} (Data
+            shown for 100g serving size)
           </h2>
           <h2>
             <span className="font-bold">Calories(kcal)</span>:{" "}
