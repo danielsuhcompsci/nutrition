@@ -10,7 +10,7 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 createHTTPServer({
   middleware: cors({
     origin: [
-      "http://monolith-lb-103535125.us-east-2.elb.amazonaws.com",
+      "http://monolith-lb-103535125.us-east-2.elb.amazonaws.com/",
       "https://localhost:5173",
     ],
   }),
