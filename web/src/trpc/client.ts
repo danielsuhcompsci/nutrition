@@ -15,7 +15,7 @@ const trpc = createTRPCProxyClient<AppRouter>({
     httpBatchLink({
       url: import.meta.env.DEV
         ? "http://localhost:4000"
-        : "http://server-lb-1629167841.us-east-2.elb.amazonaws.com:4000",
+        : "http://monolith-lb-103535125.us-east-2.elb.amazonaws.com:4000",
       //   fetch(url, options) {
       //     return fetch(url, {
       //       ...options,
