@@ -26,7 +26,40 @@ env:
   CONTAINER_NAME_SERVER: server
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    # services:
+    # Optional: If tests require any additional services (like a database)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies and Build Server
+        run: |
+          cd server
+          yarn install
+          yarn gen:types
+
+      - name: Start Server
+        run: |
+          yarn start & # start server in background
+        env:
+          CI: true
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: echo "Tests are assumed to run against a running server"
+          # If specific URL to wait on, use "wait-on" option
+        env:
+          CI: true
+
   deploy:
+    needs: test
     name: Deploy
     runs-on: ubuntu-latest
     environment: production

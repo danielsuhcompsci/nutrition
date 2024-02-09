@@ -9,7 +9,10 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 
 createHTTPServer({
   middleware: cors({
-    origin: "*",
+    origin: [
+      "https://localhost:5173",
+      "http://monolith-lb-103535125.us-east-2.elb.amazonaws.com",
+    ],
   }),
   router: appRouter,
   createContext,
