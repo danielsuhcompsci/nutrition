@@ -1,5 +1,5 @@
 describe("Test Search Page", () => {
-  it("passes", () => {
+  it("Can Search for an Item", () => {
     cy.visit("https://localhost:5173");
 
     // Make sure search bar is empty

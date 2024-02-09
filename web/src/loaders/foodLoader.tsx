@@ -1,10 +1,5 @@
 import { LoaderFunctionArgs } from "react-router-dom";
-import {
-  Food,
-  SearchFoodOutput,
-  getFoodById,
-  searchFood,
-} from "../trpc/helpers";
+import { Food, getFoodById } from "../trpc/helpers";
 
 export const foodLoader = async ({
   params,
