@@ -46,7 +46,17 @@ jobs:
 
       - name: Start Server
         run: |
+          ls
+          cd server
           yarn start & # start server in background
+        env:
+          CI: true
+
+      - name: Install Deps and Start Web Server
+        run: |
+          cd web
+          yarn install
+          yarn dev & # start web in background
         env:
           CI: true
 
