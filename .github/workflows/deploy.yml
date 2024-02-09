@@ -61,10 +61,13 @@ jobs:
           CI: true
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v6
-        with:
-          project: ./web
-          # If specific URL to wait on, use "wait-on" option
+        run: |
+          cd web
+          npx cypress run
+        # uses: cypress-io/github-action@v6
+        # with:
+        #   project: ./web
+        #   # If specific URL to wait on, use "wait-on" option
         env:
           CI: true
 
